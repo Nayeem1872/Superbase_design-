@@ -1,9 +1,10 @@
+'use client'
 
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import WeekCard from './components/WeekCard';
-import DatePickerModal from './components/DatePickerModal';
-import { WeekOption } from './types';
+import Navbar from '@/components/Navbar';
+import WeekCard from '@/components/WeekCard';
+import DatePickerModal from '@/components/DatePickerModal';
+import { WeekOption } from '@/types';
 import { ChevronLeft, Calendar } from 'lucide-react';
 
 const WEEK_OPTIONS: WeekOption[] = [
@@ -13,7 +14,7 @@ const WEEK_OPTIONS: WeekOption[] = [
   { id: 4, weeks: 4, price: 140, days: 20 },
 ];
 
-const App: React.FC = () => {
+export default function Home() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -126,10 +127,10 @@ const App: React.FC = () => {
               </p>
             </div>
             
-            <div className={`grid gap-6  mx-auto ${startDate ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+            <div className={`grid gap-6 mx-auto ${startDate ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
               {/* Start Date Field */}
               <div className="space-y-2">
-                
+ 
                 <div 
                   className="relative cursor-pointer group"
                   onClick={() => setIsModalOpen(true)}
@@ -150,7 +151,7 @@ const App: React.FC = () => {
               {/* End Date Field (Calculated) - Only show after start date is selected */}
               {startDate && (
                 <div className="space-y-2">
-                  
+             
                   <div className="relative">
                     <input 
                       type="text" 
@@ -226,6 +227,4 @@ const App: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default App;
+}

@@ -1,6 +1,8 @@
 
+'use client'
+
 import React from 'react';
-import { WeekOption } from '../types';
+import { WeekOption } from '@/types';
 import { Check } from 'lucide-react';
 
 interface WeekCardProps {

@@ -1,4 +1,6 @@
 
+'use client'
+
 import React from 'react';
 import { ShoppingBag, Menu } from 'lucide-react';
 
