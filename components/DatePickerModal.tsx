@@ -28,7 +28,7 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
   const startYRef = useRef(0);
   const startScrollRef = useRef(0);
 
-  const handleScroll = (ref: React.RefObject<HTMLDivElement>, setter: (val: any) => void, items: any[]) => {
+  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (val: any) => void, items: any[]) => {
     if (!ref.current) return;
     
     // Clear previous timeout
@@ -48,7 +48,7 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
     }, 50);
   };
 
-  const handleMouseDown = (e: React.MouseEvent, ref: React.RefObject<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent, ref: React.RefObject<HTMLDivElement | null>) => {
     if (!ref.current) return;
     isDraggingRef.current = true;
     startYRef.current = e.clientY;
@@ -57,26 +57,26 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
     e.preventDefault();
   };
 
-  const handleMouseMove = (e: React.MouseEvent, ref: React.RefObject<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent, ref: React.RefObject<HTMLDivElement | null>) => {
     if (!isDraggingRef.current || !ref.current) return;
     const deltaY = startYRef.current - e.clientY;
     ref.current.scrollTop = startScrollRef.current + deltaY;
   };
 
-  const handleMouseUp = (ref: React.RefObject<HTMLDivElement>) => {
+  const handleMouseUp = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (!ref.current) return;
     isDraggingRef.current = false;
     ref.current.style.cursor = 'grab';
   };
 
-  const handleTouchStart = (e: React.TouchEvent, ref: React.RefObject<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent, ref: React.RefObject<HTMLDivElement | null>) => {
     if (!ref.current) return;
     isDraggingRef.current = true;
     startYRef.current = e.touches[0].clientY;
     startScrollRef.current = ref.current.scrollTop;
   };
 
-  const handleTouchMove = (e: React.TouchEvent, ref: React.RefObject<HTMLDivElement>) => {
+  const handleTouchMove = (e: React.TouchEvent, ref: React.RefObject<HTMLDivElement | null>) => {
     if (!isDraggingRef.current || !ref.current) return;
     const deltaY = startYRef.current - e.touches[0].clientY;
     ref.current.scrollTop = startScrollRef.current + deltaY;
@@ -89,7 +89,7 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
   useEffect(() => {
     if (!isOpen) return;
     
-    const scrollToValue = (ref: React.RefObject<HTMLDivElement>, value: any, items: any[]) => {
+    const scrollToValue = (ref: React.RefObject<HTMLDivElement | null>, value: any, items: any[]) => {
       if (ref.current) {
         const index = items.indexOf(value);
         ref.current.scrollTop = index * 44;
@@ -101,7 +101,7 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
       scrollToValue(yearRef, selectedYear, YEARS);
     }, 150);
     return () => clearTimeout(timer);
-  }, [isOpen]); // Only run when modal opens, not when values change
+  }, [isOpen, selectedDay, selectedMonth, selectedYear]); // Only run when modal opens, not when values change
 
   const handleConfirm = () => {
     // Return formatted date based on selection
@@ -125,13 +125,13 @@ const DatePickerModal: React.FC<DatePickerModalProps> = ({ isOpen, onClose, onCo
       <div className="flex-1 relative overflow-hidden">
         <div 
           ref={scrollRef}
-          onScroll={() => handleScroll(scrollRef as React.RefObject<HTMLDivElement>, setter, items)}
-          onMouseDown={(e) => handleMouseDown(e, scrollRef as React.RefObject<HTMLDivElement>)}
-          onMouseMove={(e) => handleMouseMove(e, scrollRef as React.RefObject<HTMLDivElement>)}
-          onMouseUp={() => handleMouseUp(scrollRef as React.RefObject<HTMLDivElement>)}
-          onMouseLeave={() => handleMouseUp(scrollRef as React.RefObject<HTMLDivElement>)}
-          onTouchStart={(e) => handleTouchStart(e, scrollRef as React.RefObject<HTMLDivElement>)}
-          onTouchMove={(e) => handleTouchMove(e, scrollRef as React.RefObject<HTMLDivElement>)}
+          onScroll={() => handleScroll(scrollRef, setter, items)}
+          onMouseDown={(e) => handleMouseDown(e, scrollRef)}
+          onMouseMove={(e) => handleMouseMove(e, scrollRef)}
+          onMouseUp={() => handleMouseUp(scrollRef)}
+          onMouseLeave={() => handleMouseUp(scrollRef)}
+          onTouchStart={(e) => handleTouchStart(e, scrollRef)}
+          onTouchMove={(e) => handleTouchMove(e, scrollRef)}
           onTouchEnd={handleTouchEnd}
           className="h-[220px] overflow-y-auto w-full cursor-grab select-none"
           style={{ 
